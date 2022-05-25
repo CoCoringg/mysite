@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douzone.guestbook.vo.GuestbookVo;
+import com.douzone.mysite.vo.GuestbookVo;
 
 public class GuestbookRepository {
 	private Connection getConnection() throws SQLException {

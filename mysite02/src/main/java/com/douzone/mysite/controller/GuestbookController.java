@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.douzone.mysite.web.mvc.guestboard.GuestbookActionFactory;
 import com.douzone.mysite.web.mvc.user.UserActionFactory;
 import com.douzone.web.mvc.Action;
 import com.douzone.web.mvc.ActionFactory;
