@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.douzone.mysite.repository.UserRepositroy;
+import com.douzone.mysite.repository.UserRepository;
 import com.douzone.mysite.vo.UserVo;
 import com.douzone.web.mvc.Action;
 import com.douzone.web.util.WebUtil;
@@ -26,7 +26,7 @@ public class JoinAction implements Action {
 		vo.setPassword(password);
 		vo.setGender(gender);
 		
-		 new UserRepositroy().insert(vo);
+		 new UserRepository().insert(vo);
 		
 		WebUtil.redirect(request, response, request.getContextPath()+"/user?a=joinsuccess");
 	}
