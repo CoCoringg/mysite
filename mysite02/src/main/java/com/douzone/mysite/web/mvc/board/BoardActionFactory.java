@@ -9,12 +9,20 @@ public class BoardActionFactory extends ActionFactory {
 	public Action getAction(String actionName) {
 		Action action = null;
 		
-		if("add".equals(actionName)) {
-			action = new AddAction();
-		} else if("addform".equals(actionName)) {
-			action = new AddFormAction();
+		if("write".equals(actionName)) {
+			action = new WriteAction();
+		} else if("writeform".equals(actionName)) {
+			action = new WriteFormAction();
 		} else if("view".equals(actionName)) {
 			action = new ViewAction();
+		} else if("delete".equals(actionName)) {
+			action = new DeleteAction();
+		} else if("modifyform".equals(actionName)) {
+			action = new ModifyFormAction();
+		} else if("modify".equals(actionName)) {
+			action = new ModifyAction();
+		} else if("reply".equals(actionName)) {
+			action = new replyAction();
 		} else {
 			action = new IndexAction();
 		}

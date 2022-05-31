@@ -32,14 +32,22 @@
 						<tr>
 							<td>${count - status.index }</td>
 							<td style="text-align:left; padding-left:${(vo.depth-1)*10 }px">
+								<c:if test="${(vo.depth-1)*10 > 0 }">
+									<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png" />
+								</c:if>
 								<a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
 							<td>${vo.regDate }</td>
-							<c:if test='${vo.userNo == authUser.no }'>
-								<td><a href="" class="del">삭제</a></td>
-							</c:if>
+							<c:choose>
+								<c:when test="${vo.userNo == authUser.no }">
+									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no }" class="del">삭제</a></td>
+								</c:when>
+								<c:otherwise>
+									<td class="del"></td>
+								</c:otherwise>
+							</c:choose>
 						</tr>
 					</c:forEach>
 				</table>
@@ -59,7 +67,7 @@
 				<!-- pager 추가 -->
 				<div class="bottom">
 					<c:if test='${not empty authUser }'>
-						<a href="${pageContext.request.contextPath }/board?a=addform" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
 					</c:if>
 				</div>				
 			</div>

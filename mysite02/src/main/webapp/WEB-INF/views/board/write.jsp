@@ -14,8 +14,18 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board?a=add">
-					<input type = "hidden" name = "a" value="write">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board">
+					<c:choose>
+						<c:when test="${empty vo.gNo }">
+							<input type = "hidden" name = "a" value="write">
+						</c:when>
+						<c:otherwise>
+							<input type = "hidden" name = "a" value="reply">
+							<input type = "hidden" name = "gNo" value="${vo.gNo }" >
+							<input type = "hidden" name = "oNo" value="${vo.oNo }" >
+							<input type = "hidden" name = "depth" value="${vo.depth }" >
+						</c:otherwise>
+					</c:choose>
 					<input type = "hidden" name = "userNo" value="${authUser.no }" >
 					<table class="tbl-ex">
 						<tr>
