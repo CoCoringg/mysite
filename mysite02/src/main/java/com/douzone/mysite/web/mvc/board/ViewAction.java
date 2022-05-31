@@ -15,11 +15,10 @@ public class ViewAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		String no = request.getParameter("no");
 		
 		BoardVo vo = new BoardRepository().findByNo(Long.parseLong(no));
+		new BoardRepository().updateHit(Long.parseLong(no));
 		request.setAttribute("vo", vo);
 		
 		WebUtil.forward(request, response, "board/view");

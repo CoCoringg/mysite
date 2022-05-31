@@ -16,8 +16,20 @@ public class IndexAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int totalPageNum;
+		String page = request.getParameter("page");
 		List<BoardVo> list = new BoardRepository().findAll();
+		if(list.size()%5 != 0) {
+			totalPageNum = list.size() / 5 +1;
+		} else {
+			totalPageNum = list.size() / 5;
+		}
+		
+		List<BoardVo> pagingList = new BoardRepository().paging(Integer.parseInt(page));
+		
 		request.setAttribute("list", list);
+		request.setAttribute("totalPageNum", totalPageNum);
+		request.setAttribute("pagingList", pagingList);
 		
 		WebUtil.forward(request, response, "board/index");
 	}
