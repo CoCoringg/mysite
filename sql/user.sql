@@ -31,4 +31,6 @@ update user
         gender = 'male'
 	where no = 2;
 
+select * from guestbook;
 
+delete from user where no = 2;

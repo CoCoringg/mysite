@@ -19,7 +19,7 @@ public class DefaultGuestbookAction implements Action {
 		List<GuestbookVo> list = new GuestbookRepository().findAll();
 		request.setAttribute("list", list);
 		
-		WebUtil.forward(request, response, "guestbook/list.jsp");
+		WebUtil.forward(request, response, "guestbook/list");
 	}
 
 }

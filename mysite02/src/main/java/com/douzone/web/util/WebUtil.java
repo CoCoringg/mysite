@@ -13,7 +13,7 @@ public class WebUtil {
 			HttpServletResponse response, 
 			String path) throws ServletException, IOException {
 		request
-			.getRequestDispatcher("/WEB-INF/views/"+path)
+			.getRequestDispatcher("/WEB-INF/views/"+path+".jsp")
 			.forward(request, response);
 	}
 

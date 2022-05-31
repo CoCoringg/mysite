@@ -28,7 +28,7 @@ public class LoginAction implements Action {
 			/* 로그인 실패 */
 			request.setAttribute("result", "fail");
 			request.setAttribute("email", email);
-			WebUtil.forward(request, response, "user/loginform.jsp");
+			WebUtil.forward(request, response, "user/loginform");
 			return;
 		}
 		

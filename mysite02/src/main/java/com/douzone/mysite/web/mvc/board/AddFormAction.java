@@ -1,4 +1,4 @@
-package com.douzone.mysite.web.mvc.user;
+package com.douzone.mysite.web.mvc.board;
 
 import java.io.IOException;
 
@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.douzone.web.mvc.Action;
 import com.douzone.web.util.WebUtil;
 
-public class LoginFormAction implements Action {
+public class AddFormAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		WebUtil.forward(request, response, "user/loginform");
+		WebUtil.forward(request, response, "board/write");
 	}
 
 }
