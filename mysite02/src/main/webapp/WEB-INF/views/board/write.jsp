@@ -43,7 +43,14 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board">취소</a>
+						<c:choose>
+							<c:when test="${empty param.no }">
+								<a href="${pageContext.request.contextPath }/board?page=1">취소</a>
+							</c:when>
+							<c:otherwise>
+								<a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no}">취소</a>
+							</c:otherwise>
+						</c:choose>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

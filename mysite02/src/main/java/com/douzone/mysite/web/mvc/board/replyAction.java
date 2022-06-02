@@ -35,7 +35,7 @@ public class replyAction implements Action {
 		
 		
 		
-		WebUtil.redirect(request, response, request.getContextPath()+"/board");
+		WebUtil.redirect(request, response, request.getContextPath()+"/board?page=1");
 		
 	}
 

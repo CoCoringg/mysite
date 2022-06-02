@@ -21,7 +21,7 @@ public class DeleteAction implements Action {
 		// 삭제 alert 
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		out.println("<script>alert('게시물이 삭제 되었습니다.'); location.href='"+request.getContextPath()+"/board';</script>");
+		out.println("<script>alert('게시물이 삭제 되었습니다.'); location.href='"+request.getContextPath()+"/board?page=1';</script>");
 		out.flush();
 		
 	}

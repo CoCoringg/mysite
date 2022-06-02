@@ -77,7 +77,7 @@
 						<c:forEach begin='1' end='${totalPageNum }' step='1' var='i'>
 							<c:choose>
 								<c:when test="${i == param.page }">
-									<li class="selected"><a href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
+									<li class="selected">${i }</li>
 								</c:when>
 								<c:otherwise>
 									<li><a href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>

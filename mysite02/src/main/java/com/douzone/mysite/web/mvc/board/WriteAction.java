@@ -26,7 +26,7 @@ public class WriteAction implements Action {
 		
 		new BoardRepository().insert(vo);
 		
-		WebUtil.redirect(request, response, request.getContextPath()+"/board");
+		WebUtil.redirect(request, response, request.getContextPath()+"/board?page=1");
 	}
 
 }
