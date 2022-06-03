@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.douzone.mysite.repository.BoardRepository;
 import com.douzone.mysite.vo.BoardVo;
+import com.douzone.mysite.vo.pagingVo;
 import com.douzone.web.mvc.Action;
 import com.douzone.web.util.WebUtil;
 
@@ -16,21 +17,40 @@ public class IndexAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int totalPageNum;
-		String page = request.getParameter("page");
-		List<BoardVo> list = new BoardRepository().findAll();
-		if(list.size()%5 != 0) {
-			totalPageNum = list.size() / 5 +1;
-		} else {
-			totalPageNum = list.size() / 5;
-		}
+		List<BoardVo> list = null;
+		List<BoardVo> pagingList = null;
+		int page = Integer.parseInt(request.getParameter("page"));
+		String keyword = request.getParameter("kwd");
+		pagingVo paging = new pagingVo();
 		
-		List<BoardVo> pagingList = new BoardRepository().paging(Integer.parseInt(page));
 		
+		int countList = paging.getCountList(); //출력될 게심루 수
+		int countPage = paging.getCountPage(); // 페이지 수
+
+
+		list = new BoardRepository().findAll(keyword);
+		pagingList = new BoardRepository().paging(page, keyword);
+		
+		int totalPage = list.size() / countList;
+
+		if(list.size() % countList > 0) {
+			totalPage++;
+			paging.setTotalPage(totalPage);
+		} 
+		
+		int startPage = ((page-1)/countPage) * countPage+1;
+		int endPage = startPage + countPage -1;
+		
+
+		paging.setStartPage(startPage);
+		paging.setEndPage(endPage);
+
+
 		request.setAttribute("list", list);
-		request.setAttribute("totalPageNum", totalPageNum);
+		request.setAttribute("keyword", keyword);
 		request.setAttribute("pagingList", pagingList);
-		
+		request.setAttribute("paging", paging);
+
 		WebUtil.forward(request, response, "board/index");
 	}
 

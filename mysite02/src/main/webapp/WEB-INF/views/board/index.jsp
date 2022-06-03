@@ -14,8 +14,8 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
-					<input type="text" id="kwd" name="kwd" value="">
+				<form id="search_form" action="${pageContext.request.contextPath }/board?page=1" method="post">
+					<input type="text" id="kwd" name="kwd" value="${keyword }">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -67,38 +67,80 @@
 				<div class="pager">
 					<ul>
 						<c:choose>
-							<c:when test="${param.page!=1 }">
-								<li><a href="${pageContext.request.contextPath }/board?page=${param.page-1 }">◀</a></li>
+							<c:when test="${param.page==1 && empty keyword }">
+								<li><a
+									href="${pageContext.request.contextPath }/board?page=1">◀</a></li>
+							</c:when>
+							<c:when test="${param.page==1 && not empty keyword }">
+								<li><a
+									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=1">◀</a></li>
+							</c:when>
+							<c:when test="${param.page!=1 && not empty keyword}">
+								<li><a
+									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${param.page-1 }">◀</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="${pageContext.request.contextPath }/board?page=1">◀</a></li>
+								<li><a
+									href="${pageContext.request.contextPath }/board?page=${param.page-1 }">◀</a></li>
 							</c:otherwise>
 						</c:choose>
-						<c:forEach begin='1' end='${totalPageNum }' step='1' var='i'>
+						<c:forEach begin='${paging.startPage }' end='${paging.endPage }'
+							step='1' var='i'>
 							<c:choose>
 								<c:when test="${i == param.page }">
 									<li class="selected">${i }</li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
+									<c:choose>
+										<c:when test="${i > paging.totalPage }">
+											<li>${i }</li>
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="${empty keyword }">
+													<li><a
+														href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
+												</c:when>
+												<c:otherwise>
+													<li><a
+														href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${i }">${i }</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:otherwise>
+									</c:choose>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						<c:choose>
-							<c:when test="${param.page == totalPageNum }">
-								<li><a href="${pageContext.request.contextPath }/board?page=${totalPageNum }">▶</a></li>
+							<c:when
+								test="${param.page == paging.totalPage && empty keyword }">
+								<li><a
+									href="${pageContext.request.contextPath }/board?page=${paging.totalPage }">▶</a></li>
+							</c:when>
+							<c:when
+								test="${param.page == paging.totalPage && not empty keyword }">
+								<li><a
+									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${paging.totalPage }">▶</a></li>
+							</c:when>
+							<c:when
+								test="${param.page != paging.totalPage && not empty keyword}">
+								<li><a
+									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${param.page+1 }">▶</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="${pageContext.request.contextPath }/board?page=${param.page+1 }">▶</a></li>
+								<li><a
+									href="${pageContext.request.contextPath }/board?page=${param.page+1 }">▶</a></li>
 							</c:otherwise>
 						</c:choose>
+
 					</ul>
-				</div>					
+				</div>
 				<div class="bottom">
 					<c:if test='${not empty authUser }'>
-						<a href="${pageContext.request.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath }/board?a=writeform"
+							id="new-book">글쓰기</a>
 					</c:if>
-				</div>				
+				</div>
 			</div>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">

@@ -31,26 +31,25 @@ public class BoardRepository {
 
 		try {
 			connection = getConnection();
-			if(vo.getgNo() == 0 ) {
+			if (vo.getgNo() == 0) {
 				String sql = "insert" + "	into board" + " values (null, ?, ?, 0, now(),"
 						+ "	(select ifnull(max(g_no)+1, 1) from board b)," + " 1, 1, ?)";
 
 				pstmt = connection.prepareStatement(sql);
-				
+
 				pstmt.setString(1, vo.getTitle());
 				pstmt.setString(2, vo.getContents());
 				pstmt.setLong(3, vo.getUserNo());
-				
+
 			} else {
-				String sql = "insert into board"
-						+ "	values (null, ?, ?, 0, now(), ?, ?, ?, ?)";
+				String sql = "insert into board" + "	values (null, ?, ?, 0, now(), ?, ?, ?, ?)";
 				pstmt = connection.prepareStatement(sql);
 
 				pstmt.setString(1, vo.getTitle());
 				pstmt.setString(2, vo.getContents());
 				pstmt.setLong(3, vo.getgNo());
-				pstmt.setLong(4, vo.getoNo()+1);
-				pstmt.setLong(5, vo.getDepth()+1);
+				pstmt.setLong(4, vo.getoNo() + 1);
+				pstmt.setLong(5, vo.getDepth() + 1);
 				pstmt.setLong(6, vo.getUserNo());
 			}
 			int count = pstmt.executeUpdate();
@@ -73,7 +72,7 @@ public class BoardRepository {
 		return result;
 	}
 
-	public List<BoardVo> findAll() {
+	public List<BoardVo> findAll(String keyword) {
 		List<BoardVo> result = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -81,15 +80,31 @@ public class BoardRepository {
 		try {
 
 			connection = getConnection();
-
-			String sql = "select no, title," 
-					+ "	(select name from user where no = a.user_no),"
-					+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\"),"
-					+ " user_no, depth"
-					+ "    from board a"
-					+ " order by g_no desc, o_no asc";
-			pstmt = connection.prepareStatement(sql);
-
+			
+			if(keyword == null) {
+				String sql = "select no, title," 
+						+ "	(select name from user where no = a.user_no),"
+						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+						+ " user_no, depth" 
+						+ "    from board a"
+						+ " order by g_no desc, o_no asc";
+				
+				pstmt = connection.prepareStatement(sql);
+				
+			} else {
+				String sql = "select no, title," 
+						+ "	(select name from user where no = a.user_no),"
+						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+						+ " user_no, depth" 
+						+ "    from board a"
+						+ " where title like ?"
+						+ " order by g_no desc, o_no asc";
+				
+				pstmt = connection.prepareStatement(sql);
+				
+				pstmt.setString(1, "%"+keyword+"%");
+			}
+			
 			rs = pstmt.executeQuery();
 
 			// 6. 결과처리
@@ -132,8 +147,8 @@ public class BoardRepository {
 		}
 		return result;
 	}
-	
-	public List<BoardVo> paging(int num) {
+
+	public List<BoardVo> paging(int num, String keyword) {
 		List<BoardVo> result = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -141,21 +156,34 @@ public class BoardRepository {
 		try {
 
 			connection = getConnection();
+			if(keyword != null) {
+				String sql = "select no, title," 
+						+ "	(select name from user where no = a.user_no),"
+						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+						+ " user_no, depth" 
+						+ "    from board a"
+						+ " where title like ?"
+						+ " order by g_no desc, o_no asc" + " limit ?, 5";
 
-			String sql = "select no, title," 
-					+ "	(select name from user where no = a.user_no),"
-					+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\"),"
-					+ " user_no, depth"
-					+ "    from board a"
-					+ " order by g_no desc, o_no asc"
-					+ " limit ?, 5";
-			
-			pstmt = connection.prepareStatement(sql);
-			
-			pstmt.setLong(1, (num-1)*5);
-			
+				pstmt = connection.prepareStatement(sql);
+
+				pstmt.setString(1, "%"+keyword+"%");
+				pstmt.setLong(2, (num - 1) * 5);
+			} else {
+				String sql = "select no, title," 
+						+ "	(select name from user where no = a.user_no),"
+						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+						+ " user_no, depth" 
+						+ "    from board a"
+						+ " order by g_no desc, o_no asc" + " limit ?, 5";
+
+				pstmt = connection.prepareStatement(sql);
+
+				pstmt.setLong(1, (num - 1) * 5);
+			}
+
 			rs = pstmt.executeQuery();
-			
+
 			// 6. 결과처리
 			while (rs.next()) {
 				long no = rs.getLong(1);
@@ -174,7 +202,7 @@ public class BoardRepository {
 				vo.setRegDate(regDate);
 				vo.setUserNo(userNo);
 				vo.setDepth(depth);
-				
+
 				result.add(vo);
 			}
 		} catch (SQLException e) {
@@ -206,9 +234,8 @@ public class BoardRepository {
 
 			connection = getConnection();
 
-			String sql = "select no, title, contents, user_no," 
-					+ " g_no, o_no, depth"
-					+ "	from board" + " where no = ?";
+			String sql = "select no, title, contents, user_no," + " g_no, o_no, depth" + "	from board"
+					+ " where no = ?";
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setLong(1, num);
 
@@ -289,12 +316,11 @@ public class BoardRepository {
 		long result = 0;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			connection = getConnection();
-			
-			String sql = "update board set title = ?, contents = ?"
-					+ "	where no = ?"; 
+
+			String sql = "update board set title = ?, contents = ?" + "	where no = ?";
 			pstmt = connection.prepareStatement(sql);
 
 			pstmt.setString(1, vo.getTitle());
@@ -302,17 +328,17 @@ public class BoardRepository {
 			pstmt.setLong(3, vo.getNo());
 
 			pstmt.executeUpdate();
-			
+
 			result = vo.getNo();
-			
+
 		} catch (SQLException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(connection != null) {
+				if (connection != null) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -322,7 +348,6 @@ public class BoardRepository {
 
 		return result;
 	}
-
 
 	public boolean replyUpdate(BoardVo vo) {
 		boolean result = false;
@@ -344,10 +369,10 @@ public class BoardRepository {
 			System.out.println("드라이버 로딩 실패:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(connection != null) {
+				if (connection != null) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -390,5 +415,133 @@ public class BoardRepository {
 
 		return result;
 	}
-}
 
+	public List<BoardVo> search(String keyword) {
+		List<BoardVo> result = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+
+			connection = getConnection();
+
+			String sql = "select no, title," 
+					+ "	(select name from user where no = a.user_no),"
+					+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+					+ " user_no, depth" 
+					+ "    from board a"
+					+ " where title like ?"
+					+ " order by g_no desc, o_no asc";
+
+			pstmt = connection.prepareStatement(sql);
+
+			pstmt.setString(1, "%"+keyword+"%");
+
+			rs = pstmt.executeQuery();
+
+			// 6. 결과처리
+			while (rs.next()) {
+				long no = rs.getLong(1);
+				String title = rs.getString(2);
+				String name = rs.getString(3);
+				int hit = rs.getInt(4);
+				String regDate = rs.getString(5);
+				long userNo = rs.getLong(6);
+				long depth = rs.getLong(7);
+
+				BoardVo vo = new BoardVo();
+				vo.setNo(no);
+				vo.setTitle(title);
+				vo.setUserName(name);
+				vo.setHit(hit);
+				vo.setRegDate(regDate);
+				vo.setUserNo(userNo);
+				vo.setDepth(depth);
+
+				result.add(vo);
+			}
+		} catch (SQLException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public List<BoardVo> pagingSearch(int num, String keyword) {
+		List<BoardVo> result = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+
+			connection = getConnection();
+
+			String sql = "select no, title," 
+					+ "	(select name from user where no = a.user_no),"
+					+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
+					+ " user_no, depth" 
+					+ "    from board a"
+					+ " where title like ?"
+					+ " order by g_no desc, o_no asc" + " limit ?, 5";
+
+			pstmt = connection.prepareStatement(sql);
+			
+			pstmt.setString(1, keyword);
+			pstmt.setLong(2, (num - 1) * 5);
+
+			rs = pstmt.executeQuery();
+
+			// 6. 결과처리
+			while (rs.next()) {
+				long no = rs.getLong(1);
+				String title = rs.getString(2);
+				String name = rs.getString(3);
+				int hit = rs.getInt(4);
+				String regDate = rs.getString(5);
+				long userNo = rs.getLong(6);
+				long depth = rs.getLong(7);
+
+				BoardVo vo = new BoardVo();
+				vo.setNo(no);
+				vo.setTitle(title);
+				vo.setUserName(name);
+				vo.setHit(hit);
+				vo.setRegDate(regDate);
+				vo.setUserNo(userNo);
+				vo.setDepth(depth);
+
+				result.add(vo);
+			}
+		} catch (SQLException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+}
