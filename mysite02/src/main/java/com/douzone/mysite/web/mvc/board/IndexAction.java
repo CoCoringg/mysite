@@ -45,7 +45,6 @@ public class IndexAction implements Action {
 		paging.setStartPage(startPage);
 		paging.setEndPage(endPage);
 
-
 		request.setAttribute("list", list);
 		request.setAttribute("keyword", keyword);
 		request.setAttribute("pagingList", pagingList);

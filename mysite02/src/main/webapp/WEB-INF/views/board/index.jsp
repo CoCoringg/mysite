@@ -90,24 +90,16 @@
 								<c:when test="${i == param.page }">
 									<li class="selected">${i }</li>
 								</c:when>
+								<c:when test="${i > paging.totalPage }">
+									<li>${i }</li>
+								</c:when>
+								<c:when test="${empty keyword }">
+									<li><a
+										href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
+								</c:when>
 								<c:otherwise>
-									<c:choose>
-										<c:when test="${i > paging.totalPage }">
-											<li>${i }</li>
-										</c:when>
-										<c:otherwise>
-											<c:choose>
-												<c:when test="${empty keyword }">
-													<li><a
-														href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
-												</c:when>
-												<c:otherwise>
-													<li><a
-														href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${i }">${i }</a></li>
-												</c:otherwise>
-											</c:choose>
-										</c:otherwise>
-									</c:choose>
+									<li><a
+										href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${i }">${i }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
