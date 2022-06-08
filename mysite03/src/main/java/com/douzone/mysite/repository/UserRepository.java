@@ -1,66 +1,27 @@
 package com.douzone.mysite.repository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.vo.UserVo;
 
 @Repository
 public class UserRepository {
-	private Connection getConnection() throws SQLException {
-		Connection connection = null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			String url = "jdbc:mysql://192.168.10.39:3306/webdb?charset=utf8";
-			connection = DriverManager.getConnection(url, "webdb", "webdb");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패"+ e);
-		}
-		return connection;
-	}
-
+	@Autowired
+	private SqlSession sqlSession;
+	@Autowired
+	private DataSource dataSource;
+	
 	public boolean insert(UserVo vo) {
-		boolean result = false;
-		Connection connection = null;
-		PreparedStatement pstmt = null;
-
-		try {
-			connection = getConnection();
-
-			String sql = "insert"
-					+ "	into user"
-					+ " values (null, ?, ?, ?, ?, now())";
-			pstmt = connection.prepareStatement(sql);
-
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getEmail());
-			pstmt.setString(3, vo.getPassword());
-			pstmt.setString(4, vo.getGender());
-
-			int count = pstmt.executeUpdate();
-			result = count == 1;
-		} catch (SQLException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return result;
+		return sqlSession.insert("user.insert", vo) == 1;
 	}
 
 	public UserVo findByEmailAndPassword(UserVo vo) {
@@ -70,7 +31,7 @@ public class UserRepository {
 		ResultSet rs = null;
 		try {
 
-			connection = getConnection();
+			connection = dataSource.getConnection();
 
 			String sql = "select no, name"
 					+ "	from user"
@@ -117,7 +78,7 @@ public class UserRepository {
 		ResultSet rs = null;
 		try {
 
-			connection = getConnection();
+			connection = dataSource.getConnection();
 
 			String sql = "select no, name, email, gender"
 					+ "	from user"
@@ -165,7 +126,7 @@ public class UserRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connection = getConnection();
+			connection = dataSource.getConnection();
 			
 			if(vo.getPassword() == "") {
 				String sql = "update user"

@@ -1,31 +1,24 @@
 package com.douzone.mysite.repository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.GuestbookRepositoryException;
 import com.douzone.mysite.vo.GuestbookVo;
 
 @Repository
 public class GuestbookRepository {
-	private Connection getConnection() throws SQLException {
-		Connection connection = null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			
-			String url = "jdbc:mysql://192.168.10.39:3306/webdb?charset=utf8";
-			connection = DriverManager.getConnection(url, "webdb", "webdb");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패"+ e);
-		}
-		return connection;
-	}
+	@Autowired
+	private DataSource dataSource;
 	
 	public boolean insert(GuestbookVo vo) {
 		boolean result = false;
@@ -33,7 +26,7 @@ public class GuestbookRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connection = getConnection();
+			connection = dataSource.getConnection();
 			
 			String sql = "insert"
 					+ "	into guestbook"
@@ -47,7 +40,8 @@ public class GuestbookRepository {
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 		} catch (SQLException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
+			// System.out.println("드라이버 로딩 실패:" + e);
+			throw new GuestbookRepositoryException(e.toString());
 		} finally {
 			try {
 				if(pstmt != null) {
@@ -71,7 +65,7 @@ public class GuestbookRepository {
 		ResultSet rs = null;
 		
 		try {
-			connection = getConnection();
+			connection = dataSource.getConnection();
 			
 			String sql = "select password"
 					+ "	from guestbook"
@@ -114,7 +108,7 @@ public class GuestbookRepository {
 		
 		if(checkPwd(vo)) {
 			try {
-				connection = getConnection();
+				connection = dataSource.getConnection();
 
 
 				String sql = "delete from guestbook"
@@ -152,7 +146,7 @@ public class GuestbookRepository {
 		ResultSet rs = null;
 		try {
 			
-			connection = getConnection();
+			connection = dataSource.getConnection();
 			
 			String sql = "select no, name, message, date_format(reg_date, \"%Y-%m-%d\")"
 					+ "	from guestbook"
