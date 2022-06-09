@@ -75,8 +75,8 @@ public class BoardRepository {
 		return result;
 	}
 
-	public List<BoardVo> findAll(String keyword) {
-		List<BoardVo> result = new ArrayList<>();
+	public Integer listCount() {
+		int result = 0;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -84,52 +84,15 @@ public class BoardRepository {
 
 			connection = getConnection();
 			
-			if(keyword == null) {
-				String sql = "select no, title," 
-						+ "	(select name from user where no = a.user_no),"
-						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
-						+ " user_no, depth" 
-						+ "    from board a"
-						+ " order by g_no desc, o_no asc";
-				
-				pstmt = connection.prepareStatement(sql);
-				
-			} else {
-				String sql = "select no, title," 
-						+ "	(select name from user where no = a.user_no),"
-						+ "	hit, date_format(reg_date, \"%Y-%m-%d %H:%m:%s\")," 
-						+ " user_no, depth" 
-						+ "    from board a"
-						+ " where title like ?"
-						+ " order by g_no desc, o_no asc";
-				
-				pstmt = connection.prepareStatement(sql);
-				
-				pstmt.setString(1, "%"+keyword+"%");
-			}
+			String sql = "select count(*) from board";
+			
+			pstmt = connection.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
 
 			// 6. 결과처리
-			while (rs.next()) {
-				long no = rs.getLong(1);
-				String title = rs.getString(2);
-				String name = rs.getString(3);
-				int hit = rs.getInt(4);
-				String regDate = rs.getString(5);
-				long userNo = rs.getLong(6);
-				long depth = rs.getLong(7);
-
-				BoardVo vo = new BoardVo();
-				vo.setNo(no);
-				vo.setTitle(title);
-				vo.setUserName(name);
-				vo.setHit(hit);
-				vo.setRegDate(regDate);
-				vo.setUserNo(userNo);
-				vo.setDepth(depth);
-
-				result.add(vo);
+			if (rs.next()) {
+				result = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
@@ -151,7 +114,7 @@ public class BoardRepository {
 		return result;
 	}
 
-	public List<BoardVo> paging(int num, String keyword) {
+	public List<BoardVo> findAll(int num, String keyword) {
 		List<BoardVo> result = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement pstmt = null;
