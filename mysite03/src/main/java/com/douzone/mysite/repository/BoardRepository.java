@@ -75,7 +75,7 @@ public class BoardRepository {
 		return result;
 	}
 
-	public Integer listCount() {
+	public Integer listCount(String keyword) {
 		int result = 0;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -83,10 +83,14 @@ public class BoardRepository {
 		try {
 
 			connection = getConnection();
-			
-			String sql = "select count(*) from board";
-			
-			pstmt = connection.prepareStatement(sql);
+			if(keyword == null) {
+				String sql = "select count(*) from board";
+				pstmt = connection.prepareStatement(sql);
+			} else {
+				String sql = "select count(*) from board where title like ?";
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setString(1, "%"+keyword+"%");
+			}
 			
 			rs = pstmt.executeQuery();
 

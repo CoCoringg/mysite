@@ -14,7 +14,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath }/board?page=1" method="post">
+				<form id="search_form" action="${pageContext.request.contextPath }/board/1" method="post">
 					<input type="text" id="kwd" name="kwd" value="${keyword }">
 					<input type="submit" value="찾기">
 				</form>
@@ -27,16 +27,15 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<c:set var='count' value='${fn:length(list) }' />
 					<c:choose>
-						<c:when test="${param.page >=2 }">
-							<c:set var='count' value='${fn:length(list)-(param.page-1)*5 }' />
+						<c:when test="${page >=2 }">
+							<c:set var='count' value='${paging.totalCount-(page-1)*5 }' />
 						</c:when>
 						<c:otherwise>
-							<c:set var='count' value='${fn:length(list) }' />
+							<c:set var='count' value='${paging.totalCount }' />
 						</c:otherwise>
 					</c:choose>
-					<c:forEach items='${pagingList }' var='vo' varStatus='status'>
+					<c:forEach items='${boardList }' var='vo' varStatus='status'>
 						<tr>
 							<td>${count-status.index }</td>
 							<td style="text-align:left; padding-left:${(vo.depth-1)*10 }px">
@@ -67,27 +66,27 @@
 				<div class="pager">
 					<ul>
 						<c:choose>
-							<c:when test="${param.page==1 && empty keyword }">
+							<c:when test="${page==1 && empty keyword }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?page=1">◀</a></li>
+									href="${pageContext.request.contextPath }/board/1">◀</a></li>
 							</c:when>
-							<c:when test="${param.page==1 && not empty keyword }">
+							<c:when test="${page==1 && not empty keyword }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=1">◀</a></li>
+									href="${pageContext.request.contextPath }/board/${keyword }/1">◀</a></li>
 							</c:when>
-							<c:when test="${param.page!=1 && not empty keyword}">
+							<c:when test="${page!=1 && not empty keyword}">
 								<li><a
-									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${param.page-1 }">◀</a></li>
+									href="${pageContext.request.contextPath }/board/${keyword }/${page-1 }">◀</a></li>
 							</c:when>
 							<c:otherwise>
 								<li><a
-									href="${pageContext.request.contextPath }/board?page=${param.page-1 }">◀</a></li>
+									href="${pageContext.request.contextPath }/board/${page-1 }">◀</a></li>
 							</c:otherwise>
 						</c:choose>
 						<c:forEach begin='${paging.startPage }' end='${paging.endPage }'
 							step='1' var='i'>
 							<c:choose>
-								<c:when test="${i == param.page }">
+								<c:when test="${i == page }">
 									<li class="selected">${i }</li>
 								</c:when>
 								<c:when test="${i > paging.totalPage }">
@@ -95,33 +94,33 @@
 								</c:when>
 								<c:when test="${empty keyword }">
 									<li><a
-										href="${pageContext.request.contextPath }/board?page=${i }">${i }</a></li>
+										href="${pageContext.request.contextPath }/board/${i }">${i }</a></li>
 								</c:when>
 								<c:otherwise>
 									<li><a
-										href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${i }">${i }</a></li>
+										href="${pageContext.request.contextPath }/board/${keyword }/${i }">${i }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						<c:choose>
 							<c:when
-								test="${param.page == paging.totalPage && empty keyword }">
+								test="${page == paging.totalPage && empty keyword }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?page=${paging.totalPage }">▶</a></li>
+									href="${pageContext.request.contextPath }/board/${paging.totalPage }">▶</a></li>
 							</c:when>
 							<c:when
-								test="${param.page == paging.totalPage && not empty keyword }">
+								test="${page == paging.totalPage && not empty keyword }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${paging.totalPage }">▶</a></li>
+									href="${pageContext.request.contextPath }/board/${keyword }/${paging.totalPage }">▶</a></li>
 							</c:when>
 							<c:when
-								test="${param.page != paging.totalPage && not empty keyword}">
+								test="${page != paging.totalPage && not empty keyword}">
 								<li><a
-									href="${pageContext.request.contextPath }/board?kwd=${keyword }&page=${param.page+1 }">▶</a></li>
+									href="${pageContext.request.contextPath }/board/${keyword }/${page+1 }">▶</a></li>
 							</c:when>
 							<c:otherwise>
 								<li><a
-									href="${pageContext.request.contextPath }/board?page=${param.page+1 }">▶</a></li>
+									href="${pageContext.request.contextPath }/board/${page+1 }">▶</a></li>
 							</c:otherwise>
 						</c:choose>
 
