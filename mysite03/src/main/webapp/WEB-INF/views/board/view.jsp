@@ -35,13 +35,13 @@ pageContext.setAttribute("newLine", "\n");
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="${pageContext.request.contextPath }/board?page=1">글목록</a>
+					<a href="${pageContext.request.contextPath }/board/1">글목록</a>
 					<c:if test="${vo.userNo == authUser.no }">
-						<a href="${pageContext.request.contextPath }/board?a=writeform&no=${vo.no }">답글달기</a>
-						<a href="${pageContext.request.contextPath }/board?a=modifyform&no=${vo.no }">글수정</a>
+						<a href="${pageContext.request.contextPath }/board/write/${vo.no }">답글달기</a>
+						<a href="${pageContext.request.contextPath }/board/modify/${vo.no }">글수정</a>
 					</c:if>
 					<c:if test="${not empty authUser && vo.userNo != authUser.no }">
-						<a href="${pageContext.request.contextPath }/board?a=writeform&no=${vo.no }">답글달기</a>
+						<a href="${pageContext.request.contextPath }/board/write/${vo.no }">답글달기</a>
 					</c:if>
 				</div>
 			</div>

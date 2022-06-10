@@ -38,4 +38,12 @@ public class BoardService {
 		
 		return vo;
 	}
+	
+	public BoardVo getBoard(long no) {
+		return boardRepository.findByNo(no);
+	}
+
+	public boolean insert(BoardVo vo) {
+		return boardRepository.insert(vo);
+	}
 }
