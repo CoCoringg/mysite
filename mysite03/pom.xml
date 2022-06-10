@@ -29,6 +29,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Spring aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
 		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
