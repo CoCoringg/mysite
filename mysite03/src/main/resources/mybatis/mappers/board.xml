@@ -52,4 +52,48 @@
 			 where no = #{no }
 		]]>
 	</select>
+	
+	<insert id="insert" parameterType="boardvo">
+		<choose>
+			<when test="gNo == 0">
+				<![CDATA[ 
+					insert into board 
+						values (null, #{title }, #{contents }, 0, now(),
+						(select ifnull(max(g_no)+1, 1) from board b), 1,1, #{userNo }) 
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[ 
+					insert into board
+						values (null, #{title }, #{contents }, 0, now(),
+						#{gNo }, #{oNo }+1, #{depth }+1, #{userNo }) 
+				]]>
+			</otherwise>
+		</choose>
+	</insert>
+	
+	<update id="replyUpdate" parameterType="boardvo">
+		<![CDATA[ 
+			update board set o_no = (o_no+1) where o_no > #{oNo } and g_no = #{gNo }
+		]]>
+	</update>
+	
+	<update id="update" parameterType="boardvo">
+		<![CDATA[ 
+			update board set title = #{title }, contents = #{contents }
+				where no = #{no }
+		]]>
+	</update>
+	
+	<update id="updateHit" parameterType="long">
+		<![CDATA[ 
+			update board set hit = hit + 1 where no = #{no }
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		<![CDATA[ 
+			delete from board where no = #{no }
+		]]>
+	</delete>
 </mapper>

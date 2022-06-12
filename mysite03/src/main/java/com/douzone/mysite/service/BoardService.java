@@ -20,6 +20,7 @@ public class BoardService {
 	
 	public pagingVo paging(int page, String kwd) {
 		pagingVo vo = new pagingVo();
+		vo.setCurrentPage(page);
 		vo.setCountList(5); // 출력될 게시물 수
 		vo.setCountPage(5); // 페이지 수
 		vo.setTotalCount(boardRepository.listCount(kwd)); 
@@ -27,9 +28,8 @@ public class BoardService {
 		
 		if(vo.getTotalCount() % vo.getCountList() > 0) {
 			totalPage++;
-			vo.setTotalPage(totalPage);
 		}
-		
+		vo.setTotalPage(totalPage);
 		int startPage = ((page-1)/vo.getCountPage()) * vo.getCountPage()+1;
 		int endPage = startPage + vo.getCountPage() -1;
 		
@@ -45,5 +45,21 @@ public class BoardService {
 
 	public boolean insert(BoardVo vo) {
 		return boardRepository.insert(vo);
+	}
+
+	public boolean replyUpdate(BoardVo vo) {
+		return boardRepository.replyUpdate(vo);
+	}
+
+	public boolean modify(BoardVo vo) {
+		return boardRepository.update(vo);
+	}
+
+	public boolean delete(long no) {
+		return boardRepository.delete(no);
+	}
+
+	public boolean updateHit(long no) {
+		return boardRepository.updateHit(no);
 	}
 }

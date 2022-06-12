@@ -51,7 +51,7 @@
 							<c:choose>
 								<c:when test="${vo.userNo == authUser.no }">
 									<td><a
-										href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no }"
+										href="${pageContext.request.contextPath }/board/delete/${vo.no }"
 										class="del">삭제</a></td>
 								</c:when>
 								<c:otherwise>
@@ -83,8 +83,7 @@
 									href="${pageContext.request.contextPath }/board/${page-1 }">◀</a></li>
 							</c:otherwise>
 						</c:choose>
-						<c:forEach begin='${paging.startPage }' end='${paging.endPage }'
-							step='1' var='i'>
+						<c:forEach begin='${paging.startPage }' end='${paging.endPage }' step='1' var='i'>
 							<c:choose>
 								<c:when test="${i == page }">
 									<li class="selected">${i }</li>
