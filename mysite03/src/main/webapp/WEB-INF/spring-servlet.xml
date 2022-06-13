@@ -32,11 +32,11 @@
 			<bean class="com.douzone.mysite.security.LogoutInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:mapping path="/assets/**" />
-			<mvc:mapping path="/user/auth" />
-			<mvc:mapping path="/user/logout" />
-			<bean class="com.douzone.mysite.security.AuthInterceptor" />
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/assets/**"/>
+			<mvc:exclude-mapping path="/user/auth"/>
+			<mvc:exclude-mapping path="/user/logout"/>
+			<bean class="com.douzone.mysite.security.AuthInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 
