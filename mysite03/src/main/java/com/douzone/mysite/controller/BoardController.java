@@ -21,9 +21,9 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@RequestMapping(value={"","/{page}","/{kwd}/{page}"})
+	@RequestMapping(value={"","/{page}"})
 	public String index(@PathVariable(value="page", required=false) Integer page, 
-			@PathVariable(value="kwd", required=false) String kwd, Model model) {
+			@RequestParam(value="kwd", required=false) String kwd, Model model) {
 		if(page == null) {
 			page = 1;
 		}
@@ -37,10 +37,10 @@ public class BoardController {
 		return "board/index";
 	}
 	
-	@RequestMapping(value="/search", method=RequestMethod.POST) 
-	public String search(@RequestParam("kwd") String kwd, Model model) {
-		return "redirect:/board/"+kwd+"/1";
-	}
+//	@RequestMapping(value="/search", method=RequestMethod.POST) 
+//	public String search(@RequestParam("kwd") String kwd, Model model) {
+//		return "redirect:/board/"+kwd+"/1";
+//	}
 	
 	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
 	public String view(@PathVariable("no") long no, Model model) {
@@ -62,7 +62,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/insert", method=RequestMethod.POST)
-	public String insert(@RequestParam("title") String title,
+	public String insert(@RequestParam("page") int page,
+			@RequestParam("title") String title,
 			@RequestParam("content") String content, @RequestParam("userNo") long userNo,
 			@RequestParam(value="gNo", required=false, defaultValue="0") Integer gNo,
 			@RequestParam(value="oNo", required=false, defaultValue="0") long oNo,
@@ -79,11 +80,12 @@ public class BoardController {
 			boardService.replyUpdate(vo);
 		}
 		boardService.insert(vo);
-		return "redirect:/board/1";
+		return "redirect:/board/"+page;
 	}
 	
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.GET)
-	public String modify(@PathVariable("no") long no, Model model) {
+	public String modify(@PathVariable("no") long no, 
+			Model model) {
 		BoardVo vo = boardService.getBoard(no);
 		model.addAttribute("vo",vo);
 		return "board/modify";
@@ -91,6 +93,7 @@ public class BoardController {
 	
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.POST)
 	public String modify(@PathVariable("no") long no, 
+			@RequestParam("page") int page,
 			@RequestParam("title") String title,
 			@RequestParam("content") String content, Model model) {
 		BoardVo vo = new BoardVo();
@@ -99,7 +102,7 @@ public class BoardController {
 		vo.setContents(content);
 		boardService.modify(vo);
 		
-		return "redirect:/board/view/"+no;
+		return "redirect:/board/view/"+no+"?page="+page;
 	}
 	
 	@RequestMapping(value="/delete/{no}", method=RequestMethod.GET)

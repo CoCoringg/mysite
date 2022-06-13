@@ -14,7 +14,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board/insert">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board/insert?page=${param.page }">
 					<c:choose>
 						<c:when test="${empty vo.gNo }">
 							<input type = "hidden" name = "a" value="write">
@@ -44,11 +44,11 @@
 					</table>
 					<div class="bottom">
 						<c:choose>
-							<c:when test="${empty param.no }">
-								<a href="${pageContext.request.contextPath }/board/1">취소</a>
+							<c:when test="${empty vo.no }">
+								<a href="${pageContext.request.contextPath }/board/${param.page }">취소</a>
 							</c:when>
 							<c:otherwise>
-								<a href="${pageContext.request.contextPath }/board/view/${vo.no}">취소</a>
+								<a href="${pageContext.request.contextPath }/board/view/${vo.no}?page=${param.page }">취소</a>
 							</c:otherwise>
 						</c:choose>
 						<input type="submit" value="등록">
