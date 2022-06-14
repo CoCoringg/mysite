@@ -2,15 +2,16 @@
 
 desc board;
 select * from board;
-
+select count(*) from board;
+select title from board limit 5 offset 5;
 -- insert
 insert 
 	into board
-values (null, "123", "123", 0, now(), 
+values (null, "6", "123", 0, now(), 
 	(select ifnull(max(g_no)+1, 1) from board b), 
     1, 1, 1);
     
-delete from board where no = 5;
+delete from board where no = 19;
 
 -- findAll
 select title, 
@@ -38,3 +39,6 @@ update board set o_no = (o_no+1) where ?+1 >= o_no;
 
 -- updateHit
 update board set hit = hit+1 where no = ?;
+
+-- listCount 
+select count(*) from board;
