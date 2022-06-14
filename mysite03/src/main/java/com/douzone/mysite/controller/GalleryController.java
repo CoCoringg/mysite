@@ -43,7 +43,7 @@ public class GalleryController {
 			@RequestParam(value="comments", required = true, defaultValue = "") String comments,
 			@RequestParam("file") MultipartFile multipartFile ) {
 		
-		String url = fileUploadService.restore(multipartFile);
+		String url = fileUploadService.restoreImage(multipartFile);
 		
 		GalleryVo vo = new GalleryVo();
 		vo.setUrl(url);

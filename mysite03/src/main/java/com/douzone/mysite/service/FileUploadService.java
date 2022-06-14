@@ -9,40 +9,39 @@ import java.util.Calendar;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.douzone.mysite.exception.FileUploadException;
+
 @Service
 public class FileUploadService {
-	private static String RESTORE_PATH = "/mysite-uploads";
+	private static String SAVE_PATH = "/mysite-uploads";
 	private static String URL_BASE = "/assets/gallery";
 
-	public String restore(MultipartFile multipartFile) {
-		String url = null;
+	public String restoreImage(MultipartFile file) throws FileUploadException {
 		try {
-			if(multipartFile.isEmpty()) {
-				return url;
+			File uploadDirectory = new File(SAVE_PATH);
+			if(!uploadDirectory.exists()) {
+				uploadDirectory.mkdir();
 			}
-
-			File restoreDirectory =  new File(RESTORE_PATH);
-			if(!restoreDirectory.exists()) {
-				restoreDirectory.mkdirs();
-			}
-
-			String originFileName = multipartFile.getOriginalFilename();
-			String extName = originFileName.substring(originFileName.lastIndexOf('.')+1);
-			String restoreFilename = generateSaveFilename(extName);
-//			Long fileSize = multipartFile.getSize();
 			
-			byte[] data = multipartFile.getBytes();
-			OutputStream os = new FileOutputStream(RESTORE_PATH+"/"+restoreFilename);
+			if(file.isEmpty()) {
+				// throw new FileUploadException("file upload error: image empty");
+				return null;
+			}
+			
+			String originFilename = file.getOriginalFilename();
+			String extName = originFilename.substring(originFilename.lastIndexOf('.')+1);
+			String saveFilename = generateSaveFilename(extName);
+			
+			byte[] data = file.getBytes();
+			OutputStream os = new FileOutputStream(SAVE_PATH + "/" + saveFilename);
 			os.write(data);
 			os.close();
-			
-			url = URL_BASE + "/" + restoreFilename;
-			
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 
-		return url;
+			return URL_BASE + "/" + saveFilename;
+			
+		} catch(IOException ex) {
+			throw new FileUploadException("file upload error:" + ex);
+		}
 	}
 
 	private String generateSaveFilename(String extName) {
