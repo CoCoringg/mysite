@@ -28,6 +28,7 @@ public class BoardController {
 		if(page == null) {
 			page = 1;
 		}
+		System.out.println(kwd);
 		List<BoardVo> boardList = boardService.getBoardList(page, kwd);
 		pagingVo paging = boardService.paging(page, kwd);
 		model.addAttribute("boardList", boardList);
