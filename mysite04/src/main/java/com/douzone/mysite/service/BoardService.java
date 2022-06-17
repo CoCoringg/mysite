@@ -1,6 +1,8 @@
 package com.douzone.mysite.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,16 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 	
-	public List<BoardVo> getBoardList(int page, String kwd) {
-		return boardRepository.findAll(page, kwd);
+	public Map<String, Object> getBoardList(int page, String kwd) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<BoardVo> boardList = boardRepository.findAll(page, kwd);
+		pagingVo paging= paging(page, kwd);
+		map.put("boardList", boardList);
+		map.put("paging", paging);
+		map.put("page", page);
+		map.put("keyword", kwd);
+
+		return map;
 	}
 	
 	public pagingVo paging(int page, String kwd) {

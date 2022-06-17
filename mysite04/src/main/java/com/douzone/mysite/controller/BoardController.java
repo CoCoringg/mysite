@@ -1,6 +1,6 @@
 package com.douzone.mysite.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.douzone.mysite.security.Auth;
 import com.douzone.mysite.service.BoardService;
 import com.douzone.mysite.vo.BoardVo;
-import com.douzone.mysite.vo.pagingVo;
 
 
 @Controller
@@ -28,29 +27,17 @@ public class BoardController {
 		if(page == null) {
 			page = 1;
 		}
-		System.out.println(kwd);
-		List<BoardVo> boardList = boardService.getBoardList(page, kwd);
-		pagingVo paging = boardService.paging(page, kwd);
-		model.addAttribute("boardList", boardList);
-		model.addAttribute("paging", paging);
-		model.addAttribute("keyword", kwd);
-		model.addAttribute("page", page);
-		
+		Map<String, Object> map = boardService.getBoardList(page, kwd);
+		model.addAllAttributes(map);
 		return "board/index";
 	}
 	
-//	@RequestMapping(value="/search", method=RequestMethod.POST) 
-//	public String search(@RequestParam("kwd") String kwd, Model model) {
-//		return "redirect:/board/"+kwd+"/1";
-//	}
 	
 	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
 	public String view(@PathVariable("no") long no, Model model) {
 		BoardVo vo = boardService.getBoard(no);
 		model.addAttribute("vo", vo);
-		
 		boardService.updateHit(no);
-		
 		return "board/view";
 	}
 	
@@ -66,21 +53,9 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping(value="/insert", method=RequestMethod.POST)
-	public String insert(@RequestParam("page") int page,
-			@RequestParam("title") String title,
-			@RequestParam("content") String content, @RequestParam("userNo") long userNo,
-			@RequestParam(value="gNo", required=false, defaultValue="0") Integer gNo,
-			@RequestParam(value="oNo", required=false, defaultValue="0") long oNo,
-			@RequestParam(value="depth", required=false, defaultValue="0") long depth) {
-		BoardVo vo = new BoardVo();
-		vo.setTitle(title);
-		vo.setContents(content);
-		vo.setUserNo(userNo);
-		
-		if(gNo != null) {
-			vo.setgNo(gNo);
-			vo.setoNo(oNo);
-			vo.setDepth(depth);
+	public String insert(@RequestParam("page") int page, BoardVo vo) {
+		System.out.println(vo);
+		if(vo.getgNo() != 0) {
 			boardService.replyUpdate(vo);
 		}
 		boardService.insert(vo);
@@ -99,15 +74,8 @@ public class BoardController {
 	@Auth
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.POST)
 	public String modify(@PathVariable("no") long no, 
-			@RequestParam("page") int page,
-			@RequestParam("title") String title,
-			@RequestParam("content") String content, Model model) {
-		BoardVo vo = new BoardVo();
-		vo.setNo(no);
-		vo.setTitle(title);
-		vo.setContents(content);
+			@RequestParam("page") int page, BoardVo vo, Model model) {
 		boardService.modify(vo);
-		
 		return "redirect:/board/view/"+no+"?page="+page;
 	}
 	

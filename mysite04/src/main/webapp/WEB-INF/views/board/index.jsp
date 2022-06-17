@@ -42,8 +42,15 @@
 								<c:if test="${(vo.depth-1)*10 > 0 }">
 									<img
 										src="${pageContext.servletContext.contextPath }/assets/images/reply.png" />
-								</c:if> <a
-								href="${pageContext.request.contextPath }/board/view/${vo.no }?page=${page }">${vo.title }</a>
+								</c:if> 
+								<c:choose>
+									<c:when test="${not empty param.kwd }">
+									 	<a href="${pageContext.request.contextPath }/board/view/${vo.no }?page=${page }&kwd=${param.kwd }">${vo.title }</a>
+									</c:when>
+									<c:otherwise>
+										<a href="${pageContext.request.contextPath }/board/view/${vo.no }?page=${page }">${vo.title }</a>
+									</c:otherwise>
+								</c:choose>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>

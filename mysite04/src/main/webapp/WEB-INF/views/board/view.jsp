@@ -35,7 +35,15 @@ pageContext.setAttribute("newLine", "\n");
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="${pageContext.request.contextPath }/board/${param.page }">글목록</a>
+					<c:choose>
+						<c:when test="${empty param.kwd }">
+							<a href="${pageContext.request.contextPath }/board/${param.page }">글목록</a>
+						</c:when>
+						<c:otherwise>
+							<a href="${pageContext.request.contextPath }/board/${param.page }?kwd=${param.kwd }">글목록</a>
+						</c:otherwise>
+					</c:choose>
+					
 					<c:if test="${vo.userNo == authUser.no }">
 						<a href="${pageContext.request.contextPath }/board/write/${vo.no }?page=${param.page }">답글달기</a>
 						<a href="${pageContext.request.contextPath }/board/modify/${vo.no }?page=${param.page }">글수정</a>
