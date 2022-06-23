@@ -20,11 +20,7 @@ import com.douzone.mysite.security.LoginInterceptor;
 import com.douzone.mysite.security.LogoutInterceptor;
 
 @SpringBootConfiguration
-@PropertySource("classpath:config/WebConfig.properties")
 public class WebConfig implements WebMvcConfigurer {
-
-	@Autowired
-	private Environment env;
 
 	// Site Interceptor
 	@Bean
@@ -66,14 +62,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 		registry.addInterceptor(authInterceptor()).addPathPatterns("/**").excludePathPatterns("/assets/**")
 				.excludePathPatterns("/user/auth").excludePathPatterns("/user/logout");
-	}
-
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(env.getProperty("fileupload.resourceMapping"))
-				.addResourceLocations("file:" + env.getProperty("fileupload.uploadLocation"));
-
-		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/static/");
 	}
 
 	@Override
