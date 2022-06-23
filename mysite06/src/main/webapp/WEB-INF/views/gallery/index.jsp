@@ -50,36 +50,39 @@ $(function(){
 			<div id="gallery">
 				<div>
 					<h1>갤러리</h1>
-					<a href="" id="upload-image">이미지 올리기</a>
+					<c:if test="${not empty authUser && authUser.role == 'ADMIN' }">
+						<a href="" id="upload-image">이미지 올리기</a>
+					</c:if>
 				</div>
 				<ul>
 					<c:forEach items='${list }' var='vo'>
-						<li>
-							<a	href="${pageContext.request.contextPath }${vo.url }"
-								data-lightbox="gallery"
-								class="image"
-								style="background-image:url('${pageContext.request.contextPath }${vo.url }')">&nbsp;</a>
-								
-							<a	href="${pageContext.request.contextPath }/gallery/delete/${vo.no }"
-								class="del-button"
-								title="삭제">삭제</a>
+						<li><a href="${pageContext.request.contextPath }${vo.url }"
+							data-lightbox="gallery" class="image"
+							style="background-image:url('${pageContext.request.contextPath }${vo.url }')">&nbsp;</a>
+
+							<c:if test="${not empty authUser && authUser.role == 'ADMIN' }">
+								<a	style="background: url('${pageContext.request.contextPath }/assets/images/delete-image.png') no-repeat 0 0 / 18px"
+									href="${pageContext.request.contextPath }/gallery/delete/${vo.no }"
+									class="del-button"
+									title="삭제">삭제</a>
+							</c:if>
 						</li>
 					</c:forEach>
-				</ul>	
+				</ul>
 			</div>
 
-			<div id="dialog-upload-form" title="이미지 업로드" style="display:none">
-  				<p class="validateTips normal">이미지와 간단한 코멘트를 입력해 주세요.</p>
-  				<form action="${pageContext.request.contextPath }/gallery/upload" 
-  					  method="post"
-  					  enctype="multipart/form-data">
-					<label>코멘트</label>
-					<input type="text" id="input-comments" name="comments" value="">
-					<label>이미지</label>
-					<input type="file" id="input-file" name="file">
-					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-  				</form>
+			<div id="dialog-upload-form" title="이미지 업로드" style="display: none">
+				<p class="validateTips normal">이미지와 간단한 코멘트를 입력해 주세요.</p>
+				<form action="${pageContext.request.contextPath }/gallery/upload"
+					method="post" enctype="multipart/form-data">
+					<label>코멘트</label> <input type="text" id="input-comments"
+						name="comments" value=""> <label>이미지</label> <input
+						type="file" id="input-file" name="file"> <input
+						type="submit" tabindex="-1"
+						style="position: absolute; top: -1000px">
+				</form>
 			</div>
+
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">
 			<c:param name="menu" value="gallery"/>
