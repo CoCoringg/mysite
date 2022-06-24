@@ -132,7 +132,9 @@
 				<version>1.1</version>
 				<configuration>
 					<url>http://192.168.10.39:8080/manager/text</url>
-					<server>tomcat-lx</server>
+					<path>/mysite05</path>
+					<username>admin</username>
+					<password>manager</password>
 				</configuration>
 			</plugin>
 		</plugins>
