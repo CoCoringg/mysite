@@ -20,7 +20,7 @@ public class FileUploadService {
 		try {
 			File uploadDirectory = new File(SAVE_PATH);
 			if(!uploadDirectory.exists()) {
-				uploadDirectory.mkdir();
+				uploadDirectory.mkdirs();
 			}
 			
 			if(file.isEmpty()) {
