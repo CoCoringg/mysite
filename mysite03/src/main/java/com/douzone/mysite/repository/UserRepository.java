@@ -22,10 +22,15 @@ public class UserRepository {
 	public UserVo findByNo(Long num) {
 		return sqlSession.selectOne("user.findByNo", num);
 	}
+	
+	public UserVo findByEmail(String email) {
+		return sqlSession.selectOne("user.findByEmail", email);
+	}
 
 	public boolean update(UserVo vo) {
 		return sqlSession.update("user.update", vo)==1;
 	}
+
 }
 
 
