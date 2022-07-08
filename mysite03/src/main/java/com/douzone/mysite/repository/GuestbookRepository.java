@@ -17,8 +17,9 @@ public class GuestbookRepository {
 	private SqlSession sqlSession;
 
 	public boolean insert(GuestbookVo vo) {
-		return sqlSession.insert("guestbook.insert", vo)==1;
+		return sqlSession.insert("guestbook.insert", vo) == 1;
 	}
+
 	
 	public boolean delete(Long no, String password) {
 		Map<String, Object> map = new HashMap<>();
@@ -29,6 +30,10 @@ public class GuestbookRepository {
 	
 	public List<GuestbookVo> findAll() {
 		return sqlSession.selectList("guestbook.findAll");
+	}
+	
+	public List<GuestbookVo> spaFindAll() {
+		return sqlSession.selectList("guestbook.spaFindAll");
 	}
 	
 }

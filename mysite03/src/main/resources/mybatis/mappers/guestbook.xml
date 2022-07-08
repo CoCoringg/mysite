@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="guestbook">
+
 	<select id="findAll" resultType="guestbookvo">
 		<![CDATA[ 
 			  select no, 
@@ -13,6 +14,17 @@
 		]]>
 	</select>
 	
+	<select id="spaFindAll" resultType="guestbookvo">
+		<![CDATA[ 
+			  select no, 
+					name, 
+					message, 
+					date_format(reg_date, '%Y-%m-%d %H:%i:%s') as regDate
+				from guestbook
+			order by reg_date desc limit
+		]]>
+	</select>
+	
 	<delete id="delete" parameterType="map">
 		<![CDATA[ 
 			delete from guestbook
@@ -21,11 +33,16 @@
 		]]>
 	</delete>
 	
-	<insert id="insert">
-		<![CDATA[ 
-			insert
-				into guestbook
-			 values (null, #{name }, #{password }, #{message }, now())
+	<insert id="insert" parameterType="guestbookvo">
+		<![CDATA[
+		insert
+		  into guestbook
+		values (null, #{name }, #{password }, #{message }, now())
 		]]>
+		<selectKey keyProperty="no" resultType="long" order="AFTER">
+			<![CDATA[
+			select last_insert_id();
+			]]>
+		</selectKey>
 	</insert>
 </mapper>
