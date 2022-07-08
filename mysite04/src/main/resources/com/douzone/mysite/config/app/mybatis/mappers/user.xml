@@ -9,8 +9,9 @@
 			 values (null, #{name }, #{email }, #{password }, #{gender }, 'USER', now())
 		]]>
 	</insert>
-	
-	<select id="findByEmailAndPassword" parameterType="uservo" resultType="uservo">
+
+	<select id="findByEmailAndPassword" parameterType="uservo"
+		resultType="uservo">
 		<![CDATA[ 
 			select no, name, role
 				from user
@@ -18,7 +19,7 @@
 			  and password = #{password }
 		]]>
 	</select>
-	
+
 	<select id="findByNo" parameterType="long" resultType="uservo">
 		<![CDATA[ 
 			select no, name, email, gender
@@ -26,7 +27,15 @@
 			 where no=#{no }
 		]]>
 	</select>
-	
+
+	<select id="findByEmail" parameterType="string" resultType="uservo">
+		<![CDATA[
+			select no, email
+			  from user
+			 where email=#{email }
+		]]>
+	</select>
+
 	<update id="update" parameterType="uservo">
 		<choose>
 			<when test='password == ""'>
@@ -47,5 +56,5 @@
 			</otherwise>
 		</choose>
 	</update>
-	
+
 </mapper>
