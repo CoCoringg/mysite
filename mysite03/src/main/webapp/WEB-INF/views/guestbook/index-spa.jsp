@@ -160,7 +160,9 @@ $(function(){
 						}
 						
 						console.log("삭제성공");
+						$("#list-guestbook li[data-no=" + response.data + "]").remove();
 						$("#dialog-delete-form").dialog('close');
+						return;
 						
 					} 
 				});
